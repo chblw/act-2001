@@ -38,10 +38,7 @@ tvar_fun <- function(kappa, pmf){
   
   # Partie de droite dans l'équation
   autre <- var_fun(kappa, pmf) * (cumsum(pmf)[pos] - kappa)
-  
   (etronq + autre) / (1 - kappa)
-  
-  
 }
 
 # Matrice pour les VaR
