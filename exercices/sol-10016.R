@@ -1,4 +1,4 @@
-## Solution à la question 1.4.2 du document d'exercices (version 2018-01-25)
+## Solution à la question 1.4.1 du document d'exercices (version 2018-01-25)
 ## Auteur : Deniz Alic
 
 # Définition des paramètres
