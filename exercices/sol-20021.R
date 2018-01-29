@@ -1,4 +1,4 @@
-#Solution au numéro 2.4.2.2 (version du 2015-01-28)
+#Solution au numéro 2.4.2.2 (version du 2018-01-28)
 #Auteur: Julien Bessette
 
 #kappa
