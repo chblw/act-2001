@@ -1,3 +1,6 @@
+## Solution a la question 2.4.2.1 du document d'exercices (version 2018-01-28)
+## Auteur : Julien Bessette
+
 B <- 1/2000000
 
 #a) Les valeurs pour la VaR
