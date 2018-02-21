@@ -4,12 +4,13 @@
 
 #### 1.4.1 ####
 
+
 rm(list=ls())
 
 # Définition des paramètres
 lam <- 5
 r <- c(0.5, 5)
-q <- c(10 / 11, 0.5)
+q <- c(1 / 11, 0.5)
 
 kappa <- c(0.0001, 0.001, 0.01, 0.1, 0.5, 0.9, 0.99, 0.999, 0.9999)
 
@@ -45,7 +46,6 @@ tvar_fun <- function(kappa, pmf){
   autre <- var_fun(kappa, pmf) * (cumsum(pmf)[pos] - kappa)
   
   (etronq + autre) / (1 - kappa)
-  
   
 }
 
