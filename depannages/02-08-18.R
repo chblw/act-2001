@@ -50,16 +50,23 @@ es ; vas
 
 # c) - d)
 
-m <- 1000000
-set.seed(20160419)
+m <- 100000
+set.seed(2018)
 
 # 1er choix pour simuler les Uniformes et les Xi
 u <- runif(3*m)
 u[1:6]
+tail(u, 3)
 
-x1 <- sapply(1:m, function(y) qlnorm(u[3 * y - 2], mu, sd))
-x2 <- sapply(1:m, function(y) qexp(u[3 * y - 1], be_exp))
-x3 <- sapply(1:m, function(y) qgamma(u[3 * y], al_ga, be_ga))
+al1 <- 0.5
+be1 <- al1/10
+al2 <- 1.5
+be2 <- al2/10
+al3 <- 2.5
+be3 <- al3/10
+x1 <- sapply(1:m, function(y) qgamma(u[3 * y - 2], al1, be1))
+x2 <- sapply(1:m, function(y) qgamma(u[3 * y - 1], al2, be2))
+x3 <- sapply(1:m, function(y) qgamma(u[3 * y], al3, be3))
 
 s <- x1 + x2 + x3
 
@@ -79,6 +86,10 @@ s_autre <- x1_autre + x2_autre + x3_autre
 # Vérification des 2 méthodes
 s[1:3] ; s_autre[1:3]
 
+
+x1[c(1,2,m)]
+x2[c(1,2,m)]
+x3[c(1,2,m)]
 # e)
 # Moyennes empiriques des simulations
 ex1_sim <- mean(x1)
@@ -97,7 +108,7 @@ vax3_sim <- var(x3)
 data.frame(va_theo, vax1_sim, vax2_sim, vax3_sim)
 
 # VaR Empiriques 
-
+kappa <- 0.9
 # Trouver l'indice des valeurs ordonnées qui fait en sorte que F(x) = kappa
 j <- kappa * m
 
@@ -155,14 +166,13 @@ rm(list=ls())
 # Car Bi ~ Gamma(a ,b) avec le même b, donc la somme reste gamma
 
 # Paramètres
-nn <- 50
-q <- 0.04
-alpha <- 1/2
-beta <- 1/200
+lam <- 1
+alpha <- 1.5
+beta <- alpha / 10
 
 # Fonction de masse pour la variable M
 fmx <- function(x, n = 1) # n = ... va être utile plus tard (Chap 4?)
-  dbinom(x, nn, q)
+  dpois(x, lam * n)
 
 # k est le vecteur des valeurs possibles pour M
 k <- 1:100
@@ -283,6 +293,20 @@ for (i in 1:m)
   }
   
   count <- count + M[i] + 1 # On ajuste le compteur
+}
+
+set.seed(2018)
+#### Autre méthode sans count
+for (i in 1:m)
+{
+  # Simuler le M
+  M[i] <- qbinom(runif(1), nn, q)
+  
+  # Si M > 0, on simule les B, sinon rien (x est un vecteur de 0 par défaut)
+  if(M[i] > 0) 
+  {
+    x[i] <- sum(qgamma(runif(M[i]), alpha, beta))
+  }
 }
 
 # Espérance / Variance empirique
