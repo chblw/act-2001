@@ -1,14 +1,3 @@
-Cclayton <- function(u1, u2, alpha) {
-  (u1 ^ (-alpha) + u_2 ^ (-alpha) - 1) ^ (- 1 / alpha)
-}
-
-Fx1 <- function(x1) {
-  pexp(x1, 1/1000)
-}
-
-Fx2 <- function(x2) {
-  1 - (800 / (800 + x2)) ^ 1.8
-}
 
 qx1 <- function(u) {
   - 1000 * log(1 - u)
