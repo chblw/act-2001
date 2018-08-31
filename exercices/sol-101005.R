@@ -17,7 +17,7 @@ mle_parametres_nbinom <- optim(c(0.05, 0.5), fn = negvraisemblance)$par
 
 # Poisson
 
-count_binned <- c(count[1:3], sum(count[3:7]))
+count_binned <- c(count[1:3], sum(count[4:7]))
 
 fi <- dpois(0:2, mle_parametres_poisson)
 fi <- c(fi, 1 - sum(fi))
