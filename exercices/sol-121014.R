@@ -17,6 +17,34 @@ poisson_non_homogene_params <- constrOptim(c(0.1, 0.01), neglogvrais, grad = NUL
 poisson_non_homogene_params$par
 poisson_non_homogene_params$value
 
+# Estimation des parametres power law -------------------------------------
+
+neglogvrais <- function(params) {
+  a <- params[1]
+  b <- params[2]
+  Lambda <- a * b ^ t
+  - sum(k * log(Lambda) - Lambda)
+}
+
+poisson_non_homogene_params <- constrOptim(c(0.1, 0.01), neglogvrais, grad = NULL, ui = diag(2), ci = c(0, 0))
+
+poisson_non_homogene_params$par
+poisson_non_homogene_params$value
+
+# Estimation des parametres lig-lineaire ----------------------------------
+
+neglogvrais <- function(params) {
+  a <- params[1]
+  b <- params[2]
+  Lambda <- b * (exp(a * t) - 1) / a
+  - sum(k * log(Lambda) - Lambda)
+}
+
+poisson_non_homogene_params <- constrOptim(1, neglogvrais, grad = NULL, ui = c(0, 2), ci = 1
+
+poisson_non_homogene_params$par
+poisson_non_homogene_params$value
+
 # Test adequation ---------------------------------------------------------
 
 
