@@ -22,16 +22,16 @@ poisson_non_homogene_params$value
 neglogvrais <- function(params) {
   a <- params[1]
   b <- params[2]
-  Lambda <- a * b ^ t
+  Lambda <- exp(a) / b * exp(b * (t - 1))
   - sum(k * log(Lambda) - Lambda)
 }
 
-poisson_non_homogene_params <- constrOptim(c(0.1, 0.01), neglogvrais, grad = NULL, ui = diag(2), ci = c(0, 0))
+poisson_power_law_params <- constrOptim(c(0.1, 0.01), neglogvrais, grad = NULL, ui = diag(2), ci = c(0, 0))
 
-poisson_non_homogene_params$par
-poisson_non_homogene_params$value
+poisson_power_law_params$par
+poisson_power_law_params$value
 
-# Estimation des parametres lig-lineaire ----------------------------------
+# Estimation des parametres log-lineaire ----------------------------------
 
 neglogvrais <- function(params) {
   a <- params[1]
@@ -40,10 +40,10 @@ neglogvrais <- function(params) {
   - sum(k * log(Lambda) - Lambda)
 }
 
-poisson_non_homogene_params <- constrOptim(1, neglogvrais, grad = NULL, ui = c(0, 2), ci = 1
+poisson_log_lineaire_params <- constrOptim(c(1, 0.1), neglogvrais, grad = NULL, ui = c(0, 1), ci = 0)
 
-poisson_non_homogene_params$par
-poisson_non_homogene_params$value
+poisson_log_lineaire_params$par
+poisson_log_lineaire_params$value
 
 # Test adequation ---------------------------------------------------------
 
@@ -77,5 +77,11 @@ plot(c(0, 35), c(0, 220), type = "n", ylab = expression(Lambda(t)))
 points(t, cumsum(k))
 curve(poisson_non_homogene_params$par[1] * x + poisson_non_homogene_params$par[2] * x ^ 2 / 2, c(0, max(t)), add = TRUE, col = 2)
 curve(poisson_homogene_params$par * x, c(0, max(t)), add = TRUE, col = 3)
+curve(poisson_homogene_params$par * x, c(0, max(t)), add = TRUE, col = 3)
+curve(poisson_homogene_params$par * x, c(0, max(t)), add = TRUE, col = 3)
 
-legend(x = 0, y = 200, legend = c("Empirique", "Esperence non homogene", "Esperence homogene"), col = c(1, 2, 3), lty = c(1, 1, 1))
+
+
+
+
+legend(x = 0, y = 200, legend = c("Empirique", "Esperance non homogene", "Esperance homogene"), col = c(1, 2, 3), lty = c(1, 1, 1))
