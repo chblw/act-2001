@@ -9,6 +9,7 @@ neglogvrais <- function(params) {
   a <- params[1]
   b <- params[2]
   Lambda <- a + b / 2 * (2 * t + 1)
+  print(Lambda)
   - sum(k * log(Lambda) - Lambda)
 }
 
@@ -22,11 +23,11 @@ poisson_non_homogene_params$value
 neglogvrais <- function(params) {
   a <- params[1]
   b <- params[2]
-  Lambda <- exp(a) / b * exp(b * (t - 1))
+  Lambda <- a * (t + 1) ^ b - a * t ^ b
   - sum(k * log(Lambda) - Lambda)
 }
 
-poisson_power_law_params <- constrOptim(c(0.1, 0.01), neglogvrais, grad = NULL, ui = diag(2), ci = c(0, 0))
+poisson_power_law_params <- constrOptim(c(1, 1), neglogvrais, grad = NULL, ui = diag(2), ci = c(0, 0))
 
 poisson_power_law_params$par
 poisson_power_law_params$value
@@ -36,7 +37,8 @@ poisson_power_law_params$value
 neglogvrais <- function(params) {
   a <- params[1]
   b <- params[2]
-  Lambda <- b * (exp(a * t) - 1) / a
+  Lambda <- exp(a) / b * (exp(b * t) - exp(b * (t - 1)))
+  print(Lambda)
   - sum(k * log(Lambda) - Lambda)
 }
 
@@ -44,10 +46,6 @@ poisson_log_lineaire_params <- constrOptim(c(1, 0.1), neglogvrais, grad = NULL, 
 
 poisson_log_lineaire_params$par
 poisson_log_lineaire_params$value
-
-# Test adequation ---------------------------------------------------------
-
-
 
 # Test ratio vraisemblance ------------------------------------------------
 
@@ -77,11 +75,9 @@ plot(c(0, 35), c(0, 220), type = "n", ylab = expression(Lambda(t)))
 points(t, cumsum(k))
 curve(poisson_non_homogene_params$par[1] * x + poisson_non_homogene_params$par[2] * x ^ 2 / 2, c(0, max(t)), add = TRUE, col = 2)
 curve(poisson_homogene_params$par * x, c(0, max(t)), add = TRUE, col = 3)
-curve(poisson_homogene_params$par * x, c(0, max(t)), add = TRUE, col = 3)
-curve(poisson_homogene_params$par * x, c(0, max(t)), add = TRUE, col = 3)
+curve(poisson_power_law_params$par[1] * x ^ poisson_power_law_params$par[2], c(0, max(t)), add = TRUE, col = 4)
+curve(exp(poisson_log_lineaire_params$par[1]) / poisson_log_lineaire_params$par[2] * exp(poisson_log_lineaire_params$par[2] * (x - 1)), 
+      c(0, max(t)), add = TRUE, col = 5)
 
-
-
-
-
-legend(x = 0, y = 200, legend = c("Empirique", "Esperance non homogene", "Esperance homogene"), col = c(1, 2, 3), lty = c(1, 1, 1))
+legend(x = 0, y = 200, legend = c("Empirique", "Esperance lineaire", "Esperance homogene", "Esperance Power Law", "Esperance log-lineaire"),
+       col = 1:5, lty = rep(1, 5))
