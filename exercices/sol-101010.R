@@ -18,9 +18,9 @@ alph <- 0.05
 kappa <- 0.995
 g1 <- exp(parametres_mle$par[1] + qnorm(kappa) * parametres_mle$par[2])
 
-g1 + c(-1, 1) * qt(1 - alph / 2, length(loss_data) - 1) * parametres_mle$par[2] * g1 * sqrt(1 + qnorm(kappa) ^ 2 / 2)
+g1 + c(-1, 1) * qt(1 - alph / 2, length(loss_data) - 1) * parametres_mle$par[2] * g1 * sqrt(1 + qnorm(kappa) ^ 2 / 2) / sqrt(length(loss_data))
 
-I_inv <- matrix(c(parametres_mle$par[2] ^ 2, 0, 0, parametres_mle$par[2] ^ 2 / 2), ncol = 2)
+I_inv <- matrix(c(parametres_mle$par[2] ^ 2, 0, 0, parametres_mle$par[2] ^ 2 / 2), ncol = 2) / length(loss_data)
 
 g1prime <- c(g1, g1 * qnorm(kappa))
 Var_g1 <- g1prime %*% I_inv %*% g1prime
