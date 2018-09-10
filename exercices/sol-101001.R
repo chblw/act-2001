@@ -6,7 +6,7 @@ library(RCurl)
 
 # Import dataset ----------------------------------------------------------
 
-dataset <- read.csv(text=getURL("https://cdn.rawgit.com/chblw/actrisk-data/c53de681/sweden_data.csv"))
+dataset <- read.csv(text=getURL("https://cdn.rawgit.com/actrisk/actrisk-data/4929e130/sweden_data.csv"))
 loss_data <- dataset$data
 loss_data <- loss_data[loss_data > 0]  # Une perte de 0 n'est pas une perte
 
