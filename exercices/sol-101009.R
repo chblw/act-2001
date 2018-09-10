@@ -12,20 +12,11 @@ generateur_neglogvrais <- function(loi) {
   }
 }
 
-parametres_mle_gamma <- constrOptim(c(100, 1/100), neglogvrais_gamma, grad = NULL, 
-                                    ui = diag(2), ci = c(0, 0))
-
-parametres_mle_lnorm <- constrOptim(c(5, 2), neglogvrais_lnorm, grad = NULL, 
-                                    ui = c(0, 1), ci = 0)
-
-parametres_mle_pareto <- constrOptim(c(2, 100), neglogvrais_pareto, grad = NULL, 
-                                    ui = diag(2), ci = c(0, 0))
-
 test_adequation <- function(loi, theta_init) {
   
   neglogvrais <- generateur_neglogvrais(loi)
   
-  if(loi == plnorm) {
+  if(identical(loi, plnorm)) {
     parametres_mle <- constrOptim(theta_init, neglogvrais, grad = NULL, 
                                   ui = c(0, 1), ci = 0)
   } else {
@@ -39,8 +30,17 @@ test_adequation <- function(loi, theta_init) {
   
   esperence_groupe <- sum(nombre_par_classe) * densite_groupe
   
-  sum((esperence_groupe - nombre_par_classe) ^ 2 / esperence_groupe)
+  Q <- sum((esperence_groupe - nombre_par_classe) ^ 2 / esperence_groupe)
+  Q_critique <- qchisq(0.95, length(esperence_groupe) - length(parametres_mle$par) - 1)
   
+  print(paste0("Parametre ", 1:2, " : ", parametres_mle$par))
+  print(paste0("Log-vraisemblance : ", -parametres_mle$value))
+  print(paste0("Valeur Q : ", Q))
+  print(paste0("Valeur critique : ", Q_critique))
+  ifelse(Q > Q_critique, print("On rejette"), print("On ne rejette pas"))
+  print(paste0("BIC : ", 2 * parametres_mle$value - log(length(parametres_mle$par))))
 }
 
 test_adequation(loi = pgamma, theta_init = c(100, 1/100))
+test_adequation(loi = plnorm, theta_init = c(5, 2))
+test_adequation(loi = ppareto, theta_init = c(2, 100))
