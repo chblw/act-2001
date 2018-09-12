@@ -4,15 +4,17 @@
 set.seed(2018)
 m <- 5
 
-rPP1 <- function(t, lam) {
-  Ni <- 0
-  while(tail(Ni, 1) < t) {
-    Ni <- c(Ni, tail(Ni, 1) + rexp(1, lam))
+rPP2 <- function(t, lam) {
+  Nt <- rpois(1, lam * t)
+  if(Nt > 0) {
+    Ui <- runif(Nt)
+    t * Ui
+  } else {
+    numeric()
   }
-  Ni[-c(1, length(Ni))]
 }
 
-N <- replicate(m, rPP1(10, 1))
+N <- replicate(m, rPP2(10, 1))
 
 # b) ----------------------------------------------------------------------
 
@@ -30,7 +32,7 @@ Z
 
 set.seed(2018)
 m <- 1000000
-N <- replicate(m, rPP1(10, 1))
+N <- replicate(m, rPP2(10, 1))
 Z <- numeric(m)
 
 for(i in seq_along(Z)) {
