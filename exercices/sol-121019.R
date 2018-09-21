@@ -27,15 +27,12 @@ sum(dN1_H2 * pmin(0:5, 5))
 
 tau_beta_H3 <- c(1.5, 2 * gamma(1 + 1 / 1.5))
 1 - pweibull(1, tau_beta_H3[1], 1 / tau_beta_H2[2])
-set.seed(2018)
 
-U_j <- matrix(runif(nsim * 6), ncol = 6)
+W_j_H3 <- qweibull(U_j, tau_beta_H3[1], 1 / tau_beta_H3[2])
 
-W_j_H2 <- qweibull(U_j, tau_beta_H2[1], 1 / tau_beta_H2[2])
+T_j_H3 <- t(apply(W_j_H3, 1, cumsum))
+FTk_H3 <- sapply(1:6, function(t) mean(T_j_H3[, t] > 1))
 
-T_j_H2 <- t(apply(W_j_H2, 1, cumsum))
-FTk_H2 <- sapply(1:6, function(t) mean(T_j_H2[, t] > 1))
+dN1_H3 <- diff(c(0, FTk_H3))
 
-dN1_H2 <- diff(c(0, FTk_H2))
-
-sum(dN1_H2 * pmin(0:5, 5))
+sum(dN1_H3 * pmin(0:5, 5))
