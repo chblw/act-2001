@@ -10,10 +10,11 @@ par(mfrow = c(1, 2))
 # a) ----------------------------------------------------------------------
 
 param_poisson <- mean(W_i)
-logvrais_poisson <- sum(log(dpois(W_i, param_poisson)))
+logvrais_poisson <- sum(log(dexp(W_i, param_poisson)))
 
 plot.ecdf(W_i, main = "Exponentiel")
-curve(pexp(x, 1/param_poisson), add = TRUE)
+curve(pexp(x, 1/param_poisson), add = TRUE, col = 2)
+legend(0.5, 0.2, c("Empirique", "Exponentiel"), lty = c(1, 1), col = c(1, 2))
 
 # b) ----------------------------------------------------------------------
 
@@ -24,9 +25,17 @@ neglogvrais <- function(params) {
 param_weibull <- constrOptim(c(1, 1), neglogvrais, NULL, diag(2), c(0, 0))
 param_weibull$par
 
-plot.ecdf(W_i)
-curve(pweibull(x, param_weibull$par[1], param_weibull$par[2]), add = TRUE)
+plot.ecdf(W_i, main = "Weibull")
+curve(pweibull(x, param_weibull$par[1], param_weibull$par[2]), add = TRUE, col = 2)
+legend(0.5, 0.2, c("Empirique", "Weibull"), lty = c(1, 1), col = c(1, 2))
 
 # c) ----------------------------------------------------------------------
 
-R <- 2 * (- param_weibull$value + param_poisson$value)
+R <- 2 * (-param_weibull$value - logvrais_poisson)
+qchisq(0.95, 1)
+1 - pchisq(R, 1)
+
+# d) ----------------------------------------------------------------------
+
+1 - pexp(1, param_poisson)
+1 - pweibull(1, param_weibull$par[1], param_weibull$par[2])
