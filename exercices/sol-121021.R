@@ -9,9 +9,9 @@ param_poisson <- mean(x)
 
 logvrais_poisson <- sum(log(dpois(x, param_poisson)))
 
-plot.ecdf(x, main = "Exponentiel")
+plot.ecdf(x, main = "Exponentielle")
 points(nb_sinistres, ppois(nb_sinistres, param_poisson), pch = 19, col = 2, type = "l")
-legend(2, 0.2, c("Empirique", "Poisson"), lty = c(1, 1), col = 1:2)
+legend(2, 0.2, c("Empirique", "Exponentielle"), lty = c(1, 1), col = 1:2)
 
 # H2 ----------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ cdf <- cumsum(dNt(0:6, 1, params_alpha_beta$par))
 
 plot.ecdf(x, main = "Gamma")
 points(nb_sinistres, cdf, pch = 19, col = 2, type = "l")
-legend(2, 0.2, c("Empirique", "Poisson"), lty = c(1, 1), col = 1:2)
+legend(2, 0.2, c("Empirique", "Gamma"), lty = c(1, 1), col = 1:2)
 
 # c) ----------------------------------------------------------------------
 

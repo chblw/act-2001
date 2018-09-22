@@ -12,9 +12,9 @@ par(mfrow = c(1, 2))
 param_poisson <- mean(W_i)
 logvrais_poisson <- sum(log(dexp(W_i, param_poisson)))
 
-plot.ecdf(W_i, main = "Exponentiel")
+plot.ecdf(W_i, main = "Exponentielle")
 curve(pexp(x, 1/param_poisson), add = TRUE, col = 2)
-legend(0.5, 0.2, c("Empirique", "Exponentiel"), lty = c(1, 1), col = c(1, 2))
+legend(0.5, 0.2, c("Empirique", "Exponentielle"), lty = c(1, 1), col = c(1, 2))
 
 # b) ----------------------------------------------------------------------
 
