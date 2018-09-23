@@ -9,9 +9,9 @@ param_poisson <- mean(x)
 
 logvrais_poisson <- sum(log(dpois(x, param_poisson)))
 
-plot.ecdf(x, main = "Exponentielle")
-points(nb_sinistres, ppois(nb_sinistres, param_poisson), pch = 19, col = 2, type = "l")
-legend(2, 0.2, c("Empirique", "Exponentielle"), lty = c(1, 1), col = 1:2)
+plot(nb_sinistres, nb_contrats, main = "Exponentielle", pch = 19)
+points(nb_sinistres, sum(nb_contrats) * dpois(nb_sinistres, param_poisson), pch = 19, col = 2)
+legend(3.5, 650, c("Empirique", "Exponentielle"), pch = c(19, 19), col = 1:2)
 
 # H2 ----------------------------------------------------------------------
 
@@ -27,11 +27,11 @@ params_alpha_beta <- constrOptim(c(1, 1), neglogvrais, NULL, diag(2), c(0, 0))
 
 params_alpha_beta$par
 logvrais_gamma <- -params_alpha_beta$value
-cdf <- cumsum(dNt(0:6, 1, params_alpha_beta$par))
+pdf_gamma <- dNt(0:6, 1, params_alpha_beta$par)
 
-plot.ecdf(x, main = "Gamma")
-points(nb_sinistres, cdf, pch = 19, col = 2, type = "l")
-legend(2, 0.2, c("Empirique", "Gamma"), lty = c(1, 1), col = 1:2)
+plot(nb_sinistres, nb_contrats, main = "Gamma", pch = 19)
+points(nb_sinistres, sum(nb_contrats) * pdf_gamma, pch = 19, col = 2)
+legend(3.5, 650, c("Empirique", "Gamma"), pch = c(19, 19), col = 1:2)
 
 # c) ----------------------------------------------------------------------
 
