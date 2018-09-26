@@ -38,7 +38,7 @@ test_adequation <- function(loi, theta_init) {
   print(paste0("Valeur Q : ", Q))
   print(paste0("Valeur critique : ", Q_critique))
   ifelse(Q > Q_critique, print("On rejette"), print("On ne rejette pas"))
-  print(paste0("BIC : ", -2 * parametres_mle$value + length(parametres_mle$par) * log(sum(nombre_par_classe))))
+  print(paste0("BIC : ", 2 * parametres_mle$value + length(parametres_mle$par) * log(sum(nombre_par_classe))))
 }
 
 test_adequation(loi = pgamma, theta_init = c(100, 1/100))
