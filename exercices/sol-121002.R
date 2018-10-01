@@ -8,7 +8,7 @@ rPP2 <- function(t, lam) {
   Nt <- rpois(1, lam * t)
   if(Nt > 0) {
     Ui <- runif(Nt)
-    t * Ui
+    t * sort(Ui)
   } else {
     numeric()
   }
