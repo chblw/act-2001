@@ -11,7 +11,7 @@ rNHHP2 <- function(t, Fs_inv) {
     N0 <- c(N0, tail(N0, 1) + Fs_inv(U, tail(N0, 1)))
     U <- runif(1)
   } 
-  N0[-c(1, length(N0))]
+  N0[-1]
 }
 
 Fs_inv <- function(q, s) 1/0.05 * (-0.5 + sqrt(0.5**2 + 2 * 0.05 * ( 0.5 * s + 0.05 * s ** 2 / 2 - log(1 - q)))) - s
