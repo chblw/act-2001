@@ -11,7 +11,7 @@ tau_beta_H2 <- c(0.5, 2 * gamma(1 + 1 / 0.5))
 1 - pweibull(1, tau_beta_H2[1], 1 / tau_beta_H2[2])
 set.seed(2018)
 
-U_j <- matrix(runif(nsim * 6), ncol = 6)
+U_j <- matrix(runif(nsim * 6), ncol = 6, byrow = TRUE)
 
 W_j_H2 <- qweibull(U_j, tau_beta_H2[1], 1 / tau_beta_H2[2])
 
