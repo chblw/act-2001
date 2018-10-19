@@ -9,17 +9,25 @@ par(mfrow = c(1, 2))
 
 # a) ----------------------------------------------------------------------
 
-param_poisson <- mean(W_i)
-logvrais_poisson <- sum(log(dexp(W_i, param_poisson)))
+param_poisson <- length(W_i) / 15
+
+neglogvrais <- function(param) {
+  - sum(log(dexp(W_i, param))) - log(1-pexp(15 - tail(T_i, 1), param))
+}
+
+mle_poisson <- optimize(neglogvrais, c(0, 10))
+
+param_poisson <- mle_poisson$minimum
+logvrais_poisson <- - mle_poisson$objective
 
 plot.ecdf(W_i, main = "Exponentielle")
-curve(pexp(x, 1/param_poisson), add = TRUE, col = 2)
+curve(pexp(x, param_poisson), add = TRUE, col = 2)
 legend(0.5, 0.2, c("Empirique", "Exponentielle"), lty = c(1, 1), col = c(1, 2))
 
 # b) ----------------------------------------------------------------------
 
 neglogvrais <- function(params) {
-  - sum(log(dweibull(W_i, params[1], params[2])))
+  - sum(log(dweibull(W_i, params[1], params[2]))) - log(1-pweibull(15 - tail(T_i, 1), params[1], params[2]))
 }
 
 param_weibull <- constrOptim(c(1, 1), neglogvrais, NULL, diag(2), c(0, 0))
