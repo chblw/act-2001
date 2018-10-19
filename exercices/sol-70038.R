@@ -24,7 +24,7 @@ lambda <- 0.6 - 1:5 * 0.1
 lambda_n <- sum(lambda)
 pj <- lambda / lambda_n
 
-calculate_fb <- function(index) c(0, diff(ppareto(h * 0:200, alpha[index], eta[index])))
+calculate_fb <- function(index) c(0, diff(ppareto(h * 0:199, alpha[index], eta[index])), (1-ppareto(h * 200, alpha[index], eta[index])))
 
 fb <- sapply(1:5, calculate_fb)
 
