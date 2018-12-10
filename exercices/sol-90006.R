@@ -38,7 +38,10 @@ for(alpha in c(1, 5, 10)) {
   
   S <- sort(X1 + X2)
   
-  VaRS <- S[kap * nsim + 1]
+  X1 <- X1[order(S)]
+  X2 <- X2[order(S)]
+  
+  VaRS <- S[kap * nsim]
   TVaRS <- sapply(VaRS, function(t) mean(S[S > t]))
   
   Emax <- sapply(d, function(t) mean(pmax(S - t, 0)))
