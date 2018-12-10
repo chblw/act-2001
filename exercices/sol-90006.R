@@ -36,10 +36,12 @@ for(alpha in c(1, 5, 10)) {
   X1 <- qx1(U1)
   X2 <- qx2(U2)
   
-  S <- sort(X1 + X2)
+  S <- X1 + X2
   
   X1 <- X1[order(S)]
   X2 <- X2[order(S)]
+  
+  S <- sort(S)
   
   VaRS <- S[kap * nsim]
   TVaRS <- sapply(VaRS, function(t) mean(S[S > t]))
