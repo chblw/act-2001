@@ -18,4 +18,4 @@ mean(pmax(rgamma(1000000, alph, bet) - VaR, 0))
 
 # d)
 
-VaR + 1 / (0.9995) * sl
+VaR + 1 / (1 - 0.9995) * sl
