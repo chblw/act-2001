@@ -73,5 +73,3 @@ TVaRS99 <- (1/(1-0.99)) * sum(sapply(1:1000, function(i) dnbinom(i,size=0.5*200,
 
 (BEETVaR <- 200 * TVaRX99 - TVaRS99)
 #Benefice a mutualiser: oui
-
-#test
