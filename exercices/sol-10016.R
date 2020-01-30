@@ -66,3 +66,36 @@ res <- data.frame(kappa, var, tvar)
 colnames(res) <- c("Kappa", "VaR Pois", "VaR BN1", "VaR BN2", 
                    "TVaR Pois", "TVaR BN1", "TVaR BN2")
 res
+
+###
+### Graphiques des probabilités de masse échantillonnales
+###
+### Afin de bien saisir la différence entre les TVaR, il est idéal de faire une graphique.
+###
+### Notes:
+### + Les données sont censurées à 30 afin de mieux observer la distinction.
+### + La similarité entre la Poisson et la binomiale négative (avec r = 5) initiale est  
+###     alors apparente; cependant, on note la queue plus légère de cette binomial négative. 
+### + Ceci mène aux valeurs de la TVaR plus élevées pour les quantiles plus extrèmes
+###     (à partir de 0.99, la distinction est claire).
+### + Similairement, la binomiale négative (avec r = 0.5) a une queue beaucoup plus lourdre et  
+###     donc des valeurs pour la TVaR moins élevées que les deux autres distributions.
+###
+par(mfrow = c(1, 3))
+plot(dpois(x = k, lambda = 5), 
+     main = "Poisson",
+     xlim = c(0, 30),
+     col = "blue", 
+     pch = 16)
+plot(dnbinom(x = k, size = 0.5, prob = 10 / 11),
+     main = "Binomial Négative \n r = 0.5",
+     xlim = c(0, 30),
+     col = "brown",
+     pch = 16)
+plot(dnbinom(x = k, size = 5, prob = 1 / 2),
+     main = "Binomial Négative \n r = 5",
+     xlim = c(0, 30),
+     col = "purple",
+     pch = 16)
+
+
