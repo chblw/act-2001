@@ -104,13 +104,13 @@ ggplot(data = data.frame(cost = simulatedClaimsData$`Aggregate Costs`, simulatio
 
 ## graphique plus intense qui permet de mieux visualiser :
 simulatedAggregateCosts <- simulatedClaimsData$`Aggregate Costs`
-simulatedAggregateCostsPlot <- ggplot2::ggplot(data = data.frame(cost = simulatedAggregateCosts), ggplot2::aes(cost)) + 
-    ggplot2::geom_histogram(
+simulatedAggregateCostsPlot <- ggplot(data = data.frame(cost = simulatedAggregateCosts), aes(cost)) + 
+    geom_histogram(
         fill = "gray83",
         bins = 60
     ) + 
-    ggplot2::theme_classic() + 
-    ggplot2::labs(
+    theme_classic() + 
+    labs(
         y = "Fréquence",
         x = "Coût"
     )
@@ -149,8 +149,8 @@ simulatedAggregateCostsPlot +
         ),
         alpha = 0, fill = "white", colour = "navy"
     ) +
-    ggplot2::geom_vline(
-        ggplot2::aes(xintercept = mean(simulatedAggregateCosts)),
+    geom_vline(
+        aes(xintercept = mean(simulatedAggregateCosts)),
         linetype = "dashed", colour = "gray3"
     ) +
     annotate(
