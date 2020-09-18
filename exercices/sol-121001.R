@@ -44,40 +44,55 @@ sort(Z)[0.99 * m]
 ####  Deuxième approche ####
 # On définit une fonction générale qui permet de simuler des réalisations d'une police d'asssurance avec n'importe quelle distribution
 #   sous-jacente.
-simulateLifeClaims <- function(delta, t, lambda, distributionClaims, distributionParameters, seed, numberRepetitions, numberEventsPP1) {
+simulateLifeClaims <- function(delta, t, lambda, distributionClaims, distributionParameters, simulationAlgorithm = "PP2", seed, numberRepetitions, numberEventsPP1) {
     require(rlang)  ## for the exec function which allows us to call a function uing text
     
     interEventTime <- vector(mode = "list", length = numberRepetitions)
+    eventTimeUnfiltered <- vector(mode = "list", length = numberRepetitions)
     eventTime <- vector(mode = "list", length = numberRepetitions)
-    eventTimeFiltered <- vector(mode = "list", length = numberRepetitions)
     claimCostsIndividuals <- vector(mode = "list", length = numberRepetitions)
     claimCostsAggregated <- numeric(numberRepetitions)
     numberEvents <- numeric(numberRepetitions)
     
     set.seed(seed)
-    for (i in 1:numberRepetitions) {
-        interEventTime[[i]] <- rexp(numberEventsPP1, lambda)
-        eventTime[[i]] <- cumsum(interEventTime[[i]])
-        ##  We need to ensure that enough events are simulated and 
-        ##      so check the last event occured after t.
-        stopifnot(eventTime[[i]][numberEventsPP1] >= t)
-        
-        ##  We only keep the simulated times relevent to the interval
-        eventTimeFiltered[[i]] <- eventTime[[i]][eventTime[[i]] <= t]
-        numberEvents[[i]] <- length(eventTimeFiltered[[i]])
-        
-        ##  We simulate individual claim costs (X_k) for the given distribution 
-        ##      which are then given.
-        ##
-        ##  exec function: for example if distributionClaims = "lnorm" then 
-        ##      this call is equivalent to rlnorm(numberEvents[[i]], distributionParameters[1], distributionParameters[2])
-        claimCostsIndividuals[[i]] <- rlang::exec(
-            .fn = paste0("r", distributionClaims),
-            numberEvents[[i]],
-            !!!distributionParameters
-        )
-        claimCostsAggregated[i] <- sum(exp(-delta * eventTimeFiltered[[i]]) * claimCostsIndividuals[[i]])
+    if (simulationAlgorithm == 'PP1') {
+        for (i in 1:numberRepetitions) {
+            interEventTime[[i]] <- rexp(numberEventsPP1, lambda)
+            eventTimeUnfiltered[[i]] <- cumsum(interEventTime[[i]])
+            ##  We need to ensure that enough events are simulated and 
+            ##      so check the last event occured after t.
+            stopifnot(eventTimeUnfiltered[[i]][numberEventsPP1] >= t)
+            
+            ##  We only keep the simulated times relevent to the interval
+            eventTime[[i]] <- eventTimeUnfiltered[[i]][eventTimeUnfiltered[[i]] <= t]
+            numberEvents[[i]] <- length(eventTime[[i]])
+            
+            
+            ##  We simulate individual claim costs (X_k) for the given distribution 
+            ##      which are then given.
+            ##
+            ##  exec function: for example if distributionClaims = "lnorm" then 
+            ##      this call is equivalent to rlnorm(numberEvents[[i]], distributionParameters[1], distributionParameters[2])
+            claimCostsIndividuals[[i]] <- rlang::exec(
+                .fn = paste0("r", distributionClaims),
+                numberEvents[[i]],
+                !!!distributionParameters
+            )
+            claimCostsAggregated[i] <- sum(exp(-delta * eventTime[[i]]) * claimCostsIndividuals[[i]])
+        }
+    } else if (simulationAlgorithm == 'PP2') {
+        numberEvents <- rpois(numberRepetitions, lambda * t)
+        eventTime <- sapply(numberEvents, function(nb) sort(runif(nb, 0, t))) 
+        claimCostsIndividuals <- sapply(numberEvents, function(nb) {
+            rlang::exec(
+                .fn = paste0("r", distributionClaims),
+                nb,
+                !!!distributionParameters
+            )
+        })
+        claimCostsAggregated <- mapply(function(cost, time) sum(exp(-delta * time) * cost), claimCostsIndividuals, eventTime)
     }
+    
     list(
         "Aggregate Costs" = claimCostsAggregated,
         "Time of Events" = eventTimeFiltered,
@@ -89,7 +104,8 @@ simulateLifeClaims <- function(delta, t, lambda, distributionClaims, distributio
 simulatedClaimsData <- simulateLifeClaims(
     delta = 0.03, t = 10, lambda = 1,
     distributionClaims = "lnorm", distributionParameters = list(log(10) - 0.5, 1), 
-    seed = 2018, numberRepetitions = 1E4, numberEventsPP1 = 1E2
+    seed = 2018, simulationAlgorithm = "PP1",
+    numberRepetitions = 1E4, numberEventsPP1 = 1E2
 )
 
 # Visualisation des montants aggrégés simulés :
